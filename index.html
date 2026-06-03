@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naturkost Elkershausen – Controlling Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <img class="logo-img" src="https://www.naturkost-elkershausen.de/wp-content/uploads/2017/03/elkershausen-ohne-claim.png" alt="Naturkost Elkershausen">
+    <span class="logo-sub">Controlling Dashboard</span>
+    <div class="ai-badge"><div class="ai-dot"></div>KI · Live</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Übersicht</div>
+    <div class="nav-item active" data-view="dashboard"><span class="nav-icon">📊</span>Dashboard</div>
+    <div class="nav-item" data-view="umsatz"><span class="nav-icon">💶</span>Umsatz</div>
+    <div class="nav-item" data-view="sortiment"><span class="nav-icon">🌿</span>Sortiment</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Logistik</div>
+    <div class="nav-item" data-view="touren"><span class="nav-icon">🚚</span>Tourenplanung</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Finanzen</div>
+    <div class="nav-item" data-view="liquiditaet"><span class="nav-icon">💧</span>Liquidität</div>
+    <div class="nav-item" data-view="deckungsbeitrag"><span class="nav-icon">📈</span>Deckungsbeiträge</div>
+  </div>
+
+  <div class="sidebar-footer">
+    <strong>Geschäftsführung</strong>
+    Naturkost Elkershausen GmbH
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1 id="page-title">Executive Controlling</h1>
+      <p>Letzter Sync: heute, 08:42 · Daten aus ERP & Buchhaltung · Göttingen</p>
+    </div>
+    <div class="topbar-right">
+      <select class="period-select">
+        <option>Q2 2026</option>
+        <option>Q1 2026</option>
+        <option>GJ 2025</option>
+      </select>
+      <button class="sync-btn" onclick="alert('Datensynchronisation simuliert.')">↻ Daten aktualisieren</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="dashboard-container" id="view-container">
+      </div>
+
+    <div class="chat-popover" id="chatPopover" onclick="toggleChatPanel()">
+      <span>Need help? Ask me!</span>
+      <button class="popover-close" onclick="event.stopPropagation(); closeChatPopover();">✕</button>
+    </div>
+
+    <div class="chat-fab" id="chatFab" onclick="toggleChatPanel()">
+      <img src="organic.gif" alt="Chat" class="chat-fab-gif">
+    </div>
+
+    <div class="chat-panel" id="chatPanel" style="background-color: #f4f7f4;">
+      <div style="padding: 24px 58px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border);">
+        <div style="font-family: var(--font-h); font-weight: 700; color: var(--green); font-size: 14px; display: flex; align-items: center; gap: 8px;">
+          <span>🌿</span> Ihr persönlicher Assistent
+        </div>
+        <button class="chat-close-btn" onclick="toggleChatPanel()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; padding: 4px;">✕</button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <div class="suggestions">
+        </div>
+
+      <div class="chat-input-row">
+        <input type="text" id="aiInput" placeholder="Ihre Frage zu den Zahlen …">
+        <button class="chat-send-btn" id="aiSend">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="dashChartModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(18, 18, 18, 0.7); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.2s ease;">
+  <div style="background: #ffffff; width: 94%; max-width: 1400px; height: 80vh; border-radius: 12px; border: 1px solid #d0ded0; box-shadow: 0 12px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; overflow: hidden; position: relative;">
+    
+    <div style="padding: 16px 24px; background: #eaf0ea; border-bottom: 1px solid #d0ded0; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+      <div>
+        <h3 id="modalDashTitle" style="margin: 0; font-family: var(--font-h, sans-serif); color: #2d4a2d; font-size: 16px; font-weight: 700;">Analyse Ansicht</h3>
+      </div>
+      
+      <div style="display: flex; align-items: center; gap: 16px; margin-right: 40px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <label for="modalStartDate" style="font-size: 12px; color: #2d4a2d; font-weight: 600;">Von:</label>
+          <input type="date" id="modalStartDate" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #d0ded0; background: #ffffff; color: #2d4a2d; font-size: 12px; outline: none; cursor: pointer;">
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <label for="modalEndDate" style="font-size: 12px; color: #2d4a2d; font-weight: 600;">Bis:</label>
+          <input type="date" id="modalEndDate" style="padding: 4px 8px; border-radius: 4px; border: 1px solid #d0ded0; background: #ffffff; color: #2d4a2d; font-size: 12px; outline: none; cursor: pointer;">
+        </div>
+      </div>
+    </div>
+
+    <div style="flex: 1; padding: 24px; background: #f4f7f4; position: relative; overflow: hidden;">
+      <canvas id="modalDashCanvas"></canvas>
+    </div>
+
+    <button onclick="closeDashModal()" style="position: absolute; top: 14px; right: 20px; background: none; border: none; font-size: 20px; color: #5a735a; cursor: pointer; padding: 4px; z-index: 10;">✕</button>
+  </div>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
