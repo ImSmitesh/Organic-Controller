@@ -82,6 +82,9 @@ body { font-family:var(--font-b); background:var(--bg); color:var(--text); displ
 .kpi-delta.pos { color:var(--green); } 
 .kpi-delta.neg { color:var(--danger); } 
 .kpi-delta.warn{ color:var(--warn); }
+.kpi-card p, .kpi-subtext {
+  white-space: nowrap;
+}
 
 .charts-grid { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-top:10px; }
 .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px; } 
